@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כניסה למערכת</title>
+    
+    <!-- Google Fonts - Heebo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0052cc;
+            --primary-hover-color: #0041a3;
+            --background-color: #f7f8fa;
+            --card-background-color: #ffffff;
+            --text-color: #172b4d;
+            --input-border-color: #dfe1e6;
+            --input-focus-border: #4c9aff;
+            --success-color: #00875a;
+            --error-color: #de350b;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--background-color);
+            font-family: 'Heebo', sans-serif;
+            color: var(--text-color);
+        }
+
+        .login-container {
+            padding: 20px;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .login-card {
+            background-color: var(--card-background-color);
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02), 0 10px 20px rgba(0, 0, 0, 0.08);
+            animation: card-enter 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        @keyframes card-enter {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .login-header p {
+            margin-top: 8px;
+            color: #6b778c;
+            font-size: 15px;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: #a5adba;
+            transition: color 0.3s;
+            font-size: 1.1em;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 15px 15px 52px;
+            border: 2px solid var(--input-border-color);
+            border-radius: 12px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: 'Heebo', sans-serif;
+            font-size: 16px;
+            background-color: #fafbfc;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
+        }
+
+        .input-field:focus + i {
+            color: var(--primary-color);
+        }
+        
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 82, 204, 0.2);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0, 82, 204, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background-color: #a3c7ed;
+            cursor: wait;
+        }
+
+        .spinner {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .submit-btn.loading .btn-text {
+            visibility: hidden;
+        }
+
+        .submit-btn.loading .spinner {
+            display: block;
+            position: absolute;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .footer-credit {
+            text-align: center;
+            margin-top: 35px;
+            color: #6b778c;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Toast Notifications Styling */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast i {
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+
+        .toast.toast--error { background-color: var(--error-color); }
+        .toast.toast--success { background-color: var(--success-color); }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>כניסה לניהול</h1>
+                <p>התחברות למערכת מבזק NBS</p>
+            </div>
+
+            <!-- autocomplete="off" כדי למנוע שמירת פרטים -->
+            <form id="loginForm" action="https://www.call2all.co.il/ym/login.php" method="POST" autocomplete="off" novalidate>
+                <div class="input-group">
+                    <input id="admin-login-user" type="text" name="user" class="input-field" placeholder="מספר מערכת" required autocomplete="off">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                
+                <div class="input-group">
+                    <!-- autocomplete="new-password" הוא טריק מודרני למנוע שמירת סיסמה -->
+                    <input type="password" id="password" name="password" class="input-field" placeholder="סיסמה" required autocomplete="new-password">
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <button type="submit" id="submitBtn" class="submit-btn">
+                    <span class="btn-text">התחברות</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+        </div>
+        <div class="footer-credit">
+            פותח ע"י S.M.T
+        </div>
+    </div>
+    
+    <div id="toast-container"></div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const userInput = document.getElementById('admin-login-user');
+        const passwordInput = document.getElementById('password');
+
+        // Logic for Enter key navigation
+        userInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // מניעת התנהגות ברירת מחדל של Enter
+                passwordInput.focus();
+            }
+        });
+
+        passwordInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                submitBtn.click(); // הפעלת הלחיצה על כפתור ההתחברות
+            }
+        });
+
+        // Main form submission logic
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const user = userInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if (!user || !password) {
+                showToast('נא למלא מספר מערכת וסיסמה', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            const token = `${user}:${password}`;
+            const apiUrl = `https://www.call2all.co.il/ym/api/GetSession?token=${token}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.responseStatus === 'EXCEPTION' && data.message?.includes('account locked')) {
+                    showToast('החשבון נעול. נסה שנית מאוחר יותר', 'error');
+                } else if (data.responseStatus === 'EXCEPTION') {
+                    showToast('פרטי התחברות שגויים', 'error');
+                } else if (data.responseStatus === 'OK' && data.creditFile !== 'Mivzak') {
+                     showToast('המערכת לא נמצאת בחברת מבזק NBS', 'error');
+                } else if (data.responseStatus === 'OK' && data.creditFile === 'Mivzak') {
+                    // התחברות מוצלחת - הצג הודעה והעבר מייד
+                    showToast('מתחבר למערכת...', 'success');
+                    loginForm.submit(); // העברה מיידית
+                    return; 
+                } else {
+                    showToast('אירעה שגיאה לא צפויה', 'error');
+                }
+                
+            } catch (error) {
+                console.error('API request failed:', error);
+                showToast('שגיאת תקשורת, בדוק חיבור לאינטרנט', 'error');
+            }
+            
+            setLoading(false); 
+        });
+
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            submitBtn.classList.toggle('loading', isLoading);
+        }
+
+        function showToast(message, type = 'error') {
+            const toastContainer = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast--${type}`;
+            
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            toast.innerHTML = `<i class="fas ${iconClass}"></i> ${message}`;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
